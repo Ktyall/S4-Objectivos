@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Del estándar al objetivo · Tablero · Sesión 4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,900;1,9..144,600&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{ --paper:#FAF7F2; --card:#fff; --ink:#0B0B0B; --terra:#C8553D; --pine:#234B3D; --ochre:#C8873D; --muted:#6f6a62; --line:rgba(11,11,11,.14); --ok:#2f7d5b; }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--paper); color:var(--ink); font-family:'Inter',system-ui,sans-serif; line-height:1.55; padding:26px 16px 90px; display:flex; justify-content:center; }
+  .stage{ width:100%; max-width:820px; }
+  .kick{ font-family:'Space Mono',monospace; font-size:11px; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:var(--terra); }
+  h1{ font-family:'Fraunces',serif; font-weight:900; font-size:clamp(30px,6vw,46px); line-height:1.02; letter-spacing:-.02em; margin:.12em 0 .1em; }
+  .lede{ font-family:'Fraunces'; font-style:italic; color:var(--muted); font-size:18px; margin:0 0 6px; }
+  .how{ font-size:14px; color:var(--muted); border-left:3px solid var(--terra); padding-left:14px; margin:14px 0 22px; }
+  h2{ font-family:'Fraunces'; font-weight:900; font-size:22px; margin:0; }
+  h3{ font-family:'Fraunces'; font-weight:900; font-size:19px; margin:1.1em 0 .3em; color:var(--pine); }
+  p{ font-size:15.5px; } .muted{ color:var(--muted); }
+
+  .puerta{ background:var(--card); border:1px solid var(--line); border-radius:16px; margin:12px 0; overflow:hidden; box-shadow:0 1px 0 rgba(11,11,11,.03); }
+  .phead{ display:flex; align-items:center; gap:14px; padding:18px 20px; cursor:pointer; }
+  .phead:hover{ background:rgba(200,85,61,.04); }
+  .pnum{ font-family:'Fraunces'; font-weight:900; font-size:24px; color:var(--terra); width:30px; text-align:center; }
+  .ptitle{ flex:1; } .ptitle .t{ font-family:'Fraunces'; font-weight:900; font-size:19px; }
+  .ptitle .s{ font-size:13px; color:var(--muted); }
+  .chev{ font-family:'Space Mono'; color:var(--muted); font-size:20px; }
+  .pbody{ display:none; padding:2px 22px 24px; }
+  .puerta.open .pbody{ display:block; }
+  .pbody p{ font-size:15px; margin:.7em 0; }
+
+  .ex{ border:1px solid var(--line); border-radius:12px; padding:14px 16px; margin:10px 0; }
+  .ex .bad{ color:var(--terra); font-weight:600; } .ex .good{ color:var(--ok); font-weight:600; }
+  .ex .row{ display:flex; gap:10px; align-items:flex-start; margin:4px 0; font-size:14.5px; }
+  .ex .tag{ font-family:'Space Mono'; font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; padding:2px 7px; border-radius:5px; white-space:nowrap; margin-top:2px; }
+  .ex .tag.b{ background:rgba(200,85,61,.12); color:var(--terra); } .ex .tag.g{ background:rgba(47,125,91,.12); color:var(--ok); }
+  .ex .why{ font-size:13px; color:var(--muted); margin-top:6px; }
+
+  .smart{ display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:10px 0; }
+  .smart .s{ border:1px solid var(--line); border-radius:10px; padding:10px 12px; font-size:14px; }
+  .smart .s b{ color:var(--terra); font-family:'Fraunces'; }
+
+  .step{ border-left:3px solid var(--line); padding:2px 0 2px 16px; margin:14px 0; }
+  .step .n{ font-family:'Space Mono'; font-size:11px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--terra); }
+  .step label{ display:block; font-weight:600; font-size:14.5px; margin:2px 0 6px; }
+  input[type=text], textarea{ width:100%; font:inherit; font-size:15px; color:var(--ink); background:#fff; border:1.5px solid var(--line); border-radius:10px; padding:10px 12px; }
+  textarea{ min-height:52px; resize:vertical; }
+  .verbs{ display:flex; flex-wrap:wrap; gap:7px; margin-top:4px; }
+  .vb{ font:inherit; font-size:13px; font-weight:600; color:var(--pine); background:rgba(35,75,61,.07); border:1.5px solid transparent; border-radius:999px; padding:6px 13px; cursor:pointer; }
+  .vb:hover{ border-color:var(--pine); } .vb.on{ background:var(--pine); color:#fff; }
+  .avoid{ font-size:12.5px; color:var(--muted); margin-top:8px; }
+  .avoid b{ color:var(--terra); }
+  .built{ background:rgba(35,75,61,.06); border:1.5px solid var(--pine); border-radius:14px; padding:16px 18px; margin:16px 0 6px; }
+  .built .lab{ font-family:'Space Mono'; font-size:10px; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:var(--pine); }
+  .built .obj{ font-family:'Fraunces'; font-weight:600; font-size:19px; margin-top:4px; line-height:1.3; }
+  .built .obj .ph{ color:var(--muted); font-style:italic; }
+  .checks{ margin-top:12px; }
+  .chk{ display:flex; align-items:center; gap:8px; font-size:13.5px; margin:5px 0; color:var(--muted); }
+  .chk .box{ width:18px; height:18px; border:1.5px solid var(--line); border-radius:5px; display:flex; align-items:center; justify-content:center; font-size:12px; }
+  .chk.ok{ color:var(--ok); } .chk.ok .box{ border-color:var(--ok); background:rgba(47,125,91,.1); color:var(--ok); }
+  .btn{ font-family:'Inter'; font-weight:700; font-size:14px; color:#fff; background:var(--terra); border:none; border-radius:10px; padding:10px 18px; cursor:pointer; margin-top:10px; }
+  .btn.ghost{ background:transparent; color:var(--terra); border:1.5px solid var(--terra); }
+  .btn:hover{ opacity:.92; }
+  .prac{ border:1px solid var(--line); border-radius:12px; padding:14px 16px; margin:12px 0; }
+  .prac .std{ font-family:'Fraunces'; font-weight:900; font-size:16px; }
+  .prac .type{ font-family:'Space Mono'; font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
+  .prac .hint{ font-size:13px; color:var(--muted); margin-top:8px; display:none; }
+  .prac .hint.show{ display:block; }
+  .foot{ text-align:center; color:var(--muted); font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.08em; margin-top:22px; }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="kick">La Copa del Aula · Sesión 4 · Study + Activate</div>
+  <h1>Del estándar al objetivo</h1>
+  <p class="lede">Un estándar dice a dónde vamos algún día. Un objetivo dice qué logra el alumno hoy.</p>
+  <div class="how">A su ritmo o en equipo. Abran las cuatro puertas en orden. La puerta 3 arma un objetivo con ustedes, paso a paso. La puerta 4 los deja practicar con estándares reales.</div>
+
+  <!-- PUERTA 1 -->
+  <div class="puerta" id="p1">
+    <div class="phead" onclick="tog('p1')"><div class="pnum">1</div><div class="ptitle"><div class="t">Lee: el objetivo es del alumno</div><div class="s">la idea, en cinco párrafos</div></div><div class="chev">+</div></div>
+    <div class="pbody">
+      <p>Un estándar no es un objetivo. El estándar es la meta lejana del programa: amplia, a largo plazo, imposible de lograr en una sola clase. El objetivo es lo que el alumno logrará en <em>esta</em> clase, dicho de forma que se pueda ver. Traducir uno en otro es el corazón de planear.</p>
+      <p>Aquí se conecta con el DUA. Cada estándar pedía un <strong>contenido</strong> (nombrar, explicar un tema) o una <strong>habilidad</strong> (leer, argumentar, resolver). Ese mismo estándar es el punto de partida. La pregunta que lo convierte en objetivo es simple: al terminar hoy, ¿qué podrá <em>hacer</em> el alumno que no podía al entrar?</p>
+      <p>Un buen objetivo es SMART: e<strong>S</strong>pecífico (una sola cosa clara), <strong>M</strong>edible (se puede observar), <strong>A</strong>lcanzable (posible en el tiempo real), <strong>R</strong>elevante (ligado al estándar y al alumno) y con <strong>T</strong>iempo (para el final de la clase). El corazón es el verbo: <em>entender</em>, <em>apreciar</em> y <em>conocer</em> no se ven; <em>comparar</em>, <em>clasificar</em> y <em>argumentar</em> sí.</p>
+      <p>Y una regla de oro que casi nadie cumple: el objetivo es del alumno, no del maestro. Si el alumno no sabe a dónde va, no puede dirigirse; solo puede obedecer. Un objetivo escondido en la planeación del maestro no sirve para aprender.</p>
+      <p>Por eso el objetivo se enuncia tres veces. Al inicio: el alumno sabe a dónde va. A media clase: se pregunta si va bien, y el objetivo es su espejo. Al final: comprueba si llegó, sin esperar la calificación para saberlo. Ese alumno, el que conoce su objetivo, ya puede empezar a dirigir su aprendizaje. Es la semilla de la agencia.</p>
+    </div>
+  </div>
+
+  <!-- PUERTA 2 -->
+  <div class="puerta" id="p2">
+    <div class="phead" onclick="tog('p2')"><div class="pnum">2</div><div class="ptitle"><div class="t">Mira ejemplos: antes y después</div><div class="s">cinco objetivos flojos, arreglados</div></div><div class="chev">+</div></div>
+    <div class="pbody">
+      <p class="muted" style="font-size:14px">Lo mismo, dicho de dos formas. Fíjense en el verbo y en la condición que lo vuelve medible.</p>
+      <div id="ex-list"></div>
+    </div>
+  </div>
+
+  <!-- PUERTA 3 -->
+  <div class="puerta" id="p3">
+    <div class="phead" onclick="tog('p3')"><div class="pnum">3</div><div class="ptitle"><div class="t">El convertidor: ármenlo paso a paso</div><div class="s">de un estándar a un objetivo, en vivo</div></div><div class="chev">+</div></div>
+    <div class="pbody">
+      <div class="step">
+        <div class="n">Paso 1 · el estándar</div>
+        <label>Escriban el estándar del que parten (de contenido o de habilidad).</label>
+        <input type="text" id="c-std" placeholder="ej. Identificar las partes de la célula" oninput="build()">
+      </div>
+      <div class="step">
+        <div class="n">Paso 2 · el verbo observable</div>
+        <label>Elijan un verbo que se pueda VER. Con eso empieza el objetivo.</label>
+        <div class="verbs" id="verbbank"></div>
+        <div class="avoid">Eviten: <b>entender, comprender, apreciar, conocer, saber, reflexionar</b>. No se observan.</div>
+      </div>
+      <div class="step">
+        <div class="n">Paso 3 · el qué</div>
+        <label>¿Sobre qué? El contenido o la habilidad, en concreto.</label>
+        <input type="text" id="c-que" placeholder="ej. tres organelos de la célula" oninput="build()">
+      </div>
+      <div class="step">
+        <div class="n">Paso 4 · la condición (lo que lo vuelve medible)</div>
+        <label>¿Cómo, con qué, o bajo qué criterio? Opcional, pero potente.</label>
+        <input type="text" id="c-cond" placeholder="ej. usando un modelo visual / con evidencia del texto" oninput="build()">
+      </div>
+
+      <div class="built">
+        <div class="lab">Su objetivo</div>
+        <div class="obj" id="c-obj"></div>
+        <div class="checks" id="c-checks"></div>
+      </div>
+      <button class="btn ghost" onclick="fillExample()">Ver un ejemplo armado</button>
+      <button class="btn" onclick="clearConv()">Limpiar</button>
+    </div>
+  </div>
+
+  <!-- PUERTA 4 -->
+  <div class="puerta" id="p4">
+    <div class="phead" onclick="tog('p4')"><div class="pnum">4</div><div class="ptitle"><div class="t">Practiquen: cuatro estándares reales</div><div class="s">conviertan cada uno en un objetivo</div></div><div class="chev">+</div></div>
+    <div class="pbody">
+      <p class="muted" style="font-size:14px">Escriban un objetivo para cada estándar. Empiecen con "Al final de la clase, los alumnos podrán...". Toquen "una pista" si se atoran.</p>
+      <div id="prac-list"></div>
+      <p class="muted" style="font-size:13px;margin-top:14px">Comparen en equipo: ¿el verbo se ve? ¿es de esta clase? ¿se puede medir? Si sí a las tres, es un objetivo.</p>
+    </div>
+  </div>
+
+  <div class="foot">Tablero de objetivos · La Copa del Aula 2026</div>
+</div>
+
+<script>
+  function tog(id){ var el=document.getElementById(id); el.classList.toggle("open"); el.querySelector(".chev").textContent=el.classList.contains("open")?"–":"+"; }
+
+  // Puerta 2 examples
+  var EX=[
+    {bad:"Los alumnos entenderán las fracciones.", good:"Al final de la clase, los alumnos podrán comparar dos fracciones usando un modelo visual.", why:"'Entender' no se ve. 'Comparar... usando un modelo visual' sí, y se comprueba al salir."},
+    {bad:"Apreciar la poesía.", good:"Al final, los alumnos podrán identificar dos recursos poéticos en un poema y explicar su efecto.", why:"'Apreciar' es interno. 'Identificar' y 'explicar' son observables."},
+    {bad:"Conocer la célula.", good:"Al final, los alumnos podrán describir la función de tres organelos de la célula.", why:"De 'conocer' (vago) a 'describir la función de tres' (medible y acotado)."},
+    {bad:"Trabajar la Independencia de México.", good:"Al final, los alumnos podrán explicar dos causas de la Independencia con evidencia.", why:"'Trabajar' no dice qué logran. El objetivo fija un número y una condición."},
+    {bad:"Mejorar la lectura.", good:"Al final, los alumnos podrán leer en voz alta un texto nuevo con fluidez y entonación.", why:"Estándar de habilidad: se protege el medio (voz alta), no se cambia por escrito."}
+  ];
+  var el=document.getElementById("ex-list");
+  EX.forEach(function(e){
+    var d=document.createElement("div"); d.className="ex";
+    d.innerHTML="<div class='row'><span class='tag b'>Flojo</span><span class='bad'>"+e.bad+"</span></div>"+
+      "<div class='row'><span class='tag g'>SMART</span><span class='good'>"+e.good+"</span></div>"+
+      "<div class='why'>"+e.why+"</div>";
+    el.appendChild(d);
+  });
+
+  // Puerta 3 converter
+  var VERBS=["identificar","describir","explicar","comparar","clasificar","resolver","calcular","argumentar","analizar","aplicar","construir","diseñar","demostrar","justificar","ordenar","representar","leer en voz alta"];
+  var chosenVerb="";
+  var vb=document.getElementById("verbbank");
+  VERBS.forEach(function(v){
+    var b=document.createElement("button"); b.className="vb"; b.textContent=v;
+    b.onclick=function(){ chosenVerb=v; Array.prototype.forEach.call(vb.children,function(x){x.classList.remove("on");}); b.classList.add("on"); build(); };
+    vb.appendChild(b);
+  });
+  function build(){
+    var que=document.getElementById("c-que").value.trim();
+    var cond=document.getElementById("c-cond").value.trim();
+    var o=document.getElementById("c-obj");
+    var vtxt=chosenVerb?("<strong>"+chosenVerb+"</strong>"):"<span class='ph'>[verbo]</span>";
+    var qtxt=que?que:"<span class='ph'>[qué]</span>";
+    var ctxt=cond?(" "+cond):"";
+    o.innerHTML="Al final de la clase, los alumnos podrán "+vtxt+" "+qtxt+ctxt+".";
+    // checks
+    var checks=[
+      {ok:!!chosenVerb, t:"Empieza con un verbo observable"},
+      {ok:que.length>1, t:"Dice el QUÉ (contenido o habilidad)"},
+      {ok:true, t:"Tiene marco de tiempo (al final de la clase)"},
+      {ok:cond.length>1, t:"Tiene una condición que lo hace medible"}
+    ];
+    var c=document.getElementById("c-checks"); c.innerHTML="";
+    checks.forEach(function(k){
+      var d=document.createElement("div"); d.className="chk"+(k.ok?" ok":"");
+      d.innerHTML="<span class='box'>"+(k.ok?"✓":"")+"</span>"+k.t+(k.t.indexOf("condición")>-1&&!k.ok?" (opcional)":"");
+      c.appendChild(d);
+    });
+  }
+  var EXAMPLES=[
+    {std:"Identificar las partes de la célula", verb:"describir", que:"la función de tres organelos de la célula", cond:"con sus propias palabras"},
+    {std:"Argumentar una postura", verb:"argumentar", que:"una postura sobre el texto", cond:"con dos evidencias"},
+    {std:"Resolver problemas de fracciones", verb:"comparar", que:"dos fracciones", cond:"usando un modelo visual"}
+  ];
+  var exi=0;
+  function fillExample(){
+    var e=EXAMPLES[exi % EXAMPLES.length]; exi++;
+    document.getElementById("c-std").value=e.std;
+    document.getElementById("c-que").value=e.que;
+    document.getElementById("c-cond").value=e.cond;
+    chosenVerb=e.verb;
+    Array.prototype.forEach.call(vb.children,function(x){ x.classList.toggle("on", x.textContent===e.verb); });
+    build();
+  }
+  function clearConv(){
+    document.getElementById("c-std").value=""; document.getElementById("c-que").value=""; document.getElementById("c-cond").value="";
+    chosenVerb=""; Array.prototype.forEach.call(vb.children,function(x){x.classList.remove("on");}); build();
+  }
+  build();
+
+  // Puerta 4 practice
+  var PRAC=[
+    {std:"Identificar las partes de la célula.", type:"Contenido", hint:"Contenido: el formato es una puerta. Verbo observable + cuántas partes + con qué apoyo."},
+    {std:"Leer en voz alta con fluidez.", type:"Habilidad", hint:"Habilidad: protejan el medio (voz alta). No lo cambien por escrito. Fijen la condición: texto nuevo, con entonación."},
+    {std:"Explicar las causas de la Independencia de México.", type:"Contenido", hint:"Acoten: ¿cuántas causas? ¿con qué evidencia? Eso lo vuelve medible."},
+    {std:"Resolver problemas de dos pasos (suma y resta).", type:"Habilidad", hint:"Fijen la condición: ¿con material concreto? ¿explicando el procedimiento?"}
+  ];
+  var pl=document.getElementById("prac-list");
+  PRAC.forEach(function(p,i){
+    var d=document.createElement("div"); d.className="prac";
+    d.innerHTML="<div class='type'>"+p.type+"</div><div class='std'>"+p.std+"</div>"+
+      "<textarea placeholder='Al final de la clase, los alumnos podrán...'></textarea>"+
+      "<button class='btn ghost' style='margin-top:8px;font-size:13px;padding:7px 14px' onclick='ph("+i+")'>una pista</button>"+
+      "<div class='hint' id='hint-"+i+"'>"+p.hint+"</div>";
+    pl.appendChild(d);
+  });
+  function ph(i){ document.getElementById("hint-"+i).classList.toggle("show"); }
+</script>
+</body>
+</html>
